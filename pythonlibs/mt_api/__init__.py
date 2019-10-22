@@ -125,14 +125,8 @@ class RosAPI(object):
         self.length_utils = RosApiLengthUtils(self)
 
     def login(self, username, pwd):
-        for _, attrs in self.talk([b'/login']):
-            token = binascii.unhexlify(attrs[b'ret'])
-        hasher = hashlib.md5()
-        hasher.update(b'\x00')
-        hasher.update(pwd)
-        hasher.update(token)
         self.talk([b'/login', b'=name=' + username,
-                   b'=response=00' + hasher.hexdigest().encode('ascii')])
+            b'=password=' + pwd])
 
     def talk(self, words):
         if self.write_sentence(words) == 0:
